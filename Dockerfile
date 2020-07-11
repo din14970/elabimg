@@ -5,7 +5,7 @@ FROM alpine:3.11
 ENV ELABFTW_VERSION dev
 
 # this is versioning for the container image
-ENV ELABIMG_VERSION 1.5.1
+ENV ELABIMG_VERSION 2.0.0
 
 LABEL org.label-schema.name="elabftw" \
     org.label-schema.description="Run nginx and php-fpm to serve elabftw" \
@@ -72,6 +72,9 @@ RUN echo "$(curl -sS https://composer.github.io/installer.sig) -" > composer-set
 
 # for dev only, copy composer in $PATH
 RUN cp /elabftw/composer.phar /usr/bin/composer
+
+# redirect nginx logs to stout and stderr
+RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/nginx/error.log
 
 # nginx will run on port 443
 EXPOSE 443
