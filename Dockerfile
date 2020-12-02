@@ -7,6 +7,8 @@ ENV ELABFTW_VERSION dev
 # this is versioning for the container image
 ENV ELABIMG_VERSION 2.1.0
 
+ENV COMPOSER_HOME /composer
+
 LABEL org.label-schema.name="elabftw" \
     org.label-schema.description="Run nginx and php-fpm to serve elabftw" \
     org.label-schema.url="https://www.elabftw.net" \
