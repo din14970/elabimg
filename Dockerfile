@@ -1,5 +1,5 @@
 # elabftw + nginx + php-fpm in a container
-FROM alpine:3.12
+FROM alpine:3.13
 
 # select version or branch here
 ENV ELABFTW_VERSION dev
@@ -7,7 +7,7 @@ ENV ELABFTW_VERSION dev
 # this is versioning for the container image
 ENV ELABIMG_VERSION 2.3.2
 
-ENV S6_OVERLAY_VERSION 2.1.0.2
+ENV S6_OVERLAY_VERSION 2.2.0.1
 
 ENV COMPOSER_HOME /composer
 
@@ -24,59 +24,54 @@ ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLA
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
 
 # install nginx and php-fpm
-# php7-gd is required by mpdf for transparent png
-# php7-tokenizer and php7-xmlwriter are for dev only
+# php8-gd is required by mpdf for transparent png
+# coreutils has sha384sum
+# php8-tokenizer and php8-xmlwriter are for dev only
 # don't put line comments inside this instruction
 RUN apk upgrade -U -a && apk add --no-cache \
-    autoconf \
     bash \
-    build-base \
     coreutils \
     curl \
     freetype \
     ghostscript \
     git \
-    graphicsmagick-dev \
     openssl \
-    libtool \
     nginx \
     openjdk8-jre \
-    php7 \
-    php7-curl \
-    php7-ctype \
-    php7-dev \
-    php7-dom \
-    php7-exif \
-    php7-gd \
-    php7-gettext \
-    php7-fileinfo \
-    php7-fpm \
-    php7-json \
-    php7-ldap \
-    php7-mbstring \
-    php7-opcache \
-    php7-openssl \
-    php7-pdo_mysql \
-    php7-pear \
-    php7-phar \
-    php7-redis \
-    php7-session \
-    php7-tokenizer \
-    php7-xmlwriter \
-    php7-zip \
-    php7-zlib \
+    php8 \
+    php8-curl \
+    php8-ctype \
+    php8-dev \
+    php8-dom \
+    php8-exif \
+    php8-gd \
+    php8-gettext \
+    php8-fileinfo \
+    php8-fpm \
+    php8-json \
+    php8-ldap \
+    php8-mbstring \
+    php8-opcache \
+    php8-openssl \
+    php8-pdo_mysql \
+    php8-pear \
+    php8-phar \
+    php8-redis \
+    php8-session \
+    php8-tokenizer \
+    php8-xmlwriter \
+    php8-zip \
+    php8-zlib \
     tzdata \
     unzip \
-    yarn && \
-    pecl install gmagick-2.0.5RC1 && echo "extension=gmagick.so" >> /etc/php7/php.ini && \
-    apk del autoconf build-base libtool php7-dev
+    yarn
 
 WORKDIR /elabftw
 
 # install composer
 RUN echo "$(curl -sS https://composer.github.io/installer.sig) -" > composer-setup.php.sig \
     && curl -sS https://getcomposer.org/installer | tee composer-setup.php | sha384sum -c composer-setup.php.sig \
-    && php composer-setup.php && rm composer-setup.php*
+    && php8 composer-setup.php && rm composer-setup.php*
 
 # for dev only, copy composer in $PATH
 RUN cp /elabftw/composer.phar /usr/bin/composer
