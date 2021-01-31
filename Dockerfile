@@ -66,6 +66,9 @@ RUN apk upgrade -U -a && apk add --no-cache \
     unzip \
     yarn
 
+# add a symlink to php8
+RUN ln -s /usr/bin/php8 /usr/bin/php
+
 WORKDIR /elabftw
 
 # install composer
